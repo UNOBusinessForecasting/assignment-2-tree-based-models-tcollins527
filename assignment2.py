@@ -11,27 +11,17 @@ Original file is located at
 
 import pandas as pd
 import numpy as np
-import patsy as pt
 
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
-
-import xgboost as xgb
-from xgboost import XGBClassifier
-import shap
-from shap.plots._waterfall import waterfall_legacy
-from sklearn.model_selection import KFold
-
 from sklearn.ensemble import RandomForestClassifier as RF
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 
 data = pd.read_csv('https://github.com/dustywhite7/Econ8310/raw/master/AssignmentData/assignment3.csv')
 data = data.drop('DateTime',axis=1)
 data = data.drop('id',axis=1)
-#data = data._get_numeric_data()
+
 test_data = pd.read_csv('https://github.com/dustywhite7/Econ8310/raw/master/AssignmentData/assignment3test.csv')
 test_data = test_data.drop('DateTime',axis=1)
 test_data = test_data.drop('id',axis=1)
@@ -42,22 +32,7 @@ x = data.drop('meal', axis=1)
 #yt = test_data['meal']
 xt = test_data.drop('meal', axis=1)
 
-# Upper case before split, lower case after
-Y = data['meal']
-# make sure you drop a column with the axis=1 argument
-X = data.drop('meal', axis=1)
+model = RF(n_estimators=100, n_jobs=-1, max_depth=50)
+modelFit = model.fit(x, y)
 
-# Randomly sample our data --> 70% to train with, and 30% for testing
-#x, xt, y, yt = train_test_split(X, Y, test_size=0.3)
-
-# Create the model and fit it using the train data
-clf = RF(n_estimators=100, n_jobs=-1, max_depth=50)
-modelFit = clf.fit(x, y)
-
-# Test our model using the testing data
-pred = clf.predict(xt)
-#acc = accuracy_score(yt, pred)
-
-#print("Model accuracy is {}%.".format(acc*100))
-
-len(pred)
+pred = model.predict(xt)
